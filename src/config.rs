@@ -1,3 +1,5 @@
+//! TODO: Make a banner and write docstring for this file.
+
 use std::fs;
 use std::io::Error;
 use std::path::PathBuf;

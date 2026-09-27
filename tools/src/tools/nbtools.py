@@ -128,17 +128,21 @@ def doxify(text, print_result=True):
 
 def grepy(
     pattern,
-    project_name
-):
+    project_name,
+    source_only=True,
+    output=True,
+) -> list:
     """
         Find `pattern` in the project source directory, presumed to be in `CWD`.
     """
     DEBUG = True
-    debug("Running grepy")
-    REGEX = grep(pattern, words_only=True)
+    if output: debug("Running grepy")
+    REGEX = grep(pattern, words_only=False)
     FILES = lsd(project_name, output=False)
+    TODOS = dict()
     for f in FILES:
-        info(f"Scanning {f}")
+        if output: info(f"Scanning {f}")
+        lines = list()
         if f.suffix.lstrip(PERIOD) in SRC_FILE_EXTS:
             t = f.read_text()
             m = t | REGEX
@@ -151,20 +155,31 @@ def grepy(
             if line_nos:
                 n = max(map(lambda i: len(str(i)), line_nos))
                 lines = [
-                    f"{str(i).rjust(n)}: {LINES[i].lstrip()}"
+                    f"{str(i + 1).rjust(n)}: {LINES[i].lstrip()}"
                     for i in line_nos
-                    if not (
-                        LINES[i].lstrip().startswith('/') or
-                        LINES[i].lstrip().startswith('*') or
-                        LINES[i].lstrip().startswith('//')
-                    )
                 ]
+
+                if source_only:
+                    lines = [
+                        f"{str(i + 1).rjust(n)}: {LINES[i].lstrip()}"
+                        for i in line_nos
+                        if not (
+                            LINES[i].lstrip().startswith('/') or
+                            LINES[i].lstrip().startswith('*') or
+                            LINES[i].lstrip().startswith('//')
+                        )
+                    ]
             
-                if lines:
+            if lines:
+                if output:
                     rp(f"{pattern} found in [yellow]{f.name}[/yellow]:")
                     # lines = [s.lstrip() for s in lines]
                     for s in lines:
                         print(s)
+                TODOS[f.name] = lines
+                del lines
+                
+    return TODOS
 
 def now(as_str=False):
     """

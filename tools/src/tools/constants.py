@@ -1,3 +1,4 @@
+from datetime import datetime
 
 NEWLINE = '\n'
 HYPHEN = '-'
@@ -28,7 +29,6 @@ SRC_FILE_EXTS = [
 ]
 
 CPP_COMMENT = '//'
-from datetime import datetime
 
 LEADING_SPACE = ' '
 

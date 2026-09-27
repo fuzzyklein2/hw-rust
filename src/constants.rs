@@ -22,8 +22,16 @@ pub static BASE_DIR: LazyLock<PathBuf>
                                    .parent().unwrap()
                                    .parent().unwrap()
                                    .to_path_buf());
-
-// TODO: Assign the name of the program to a LazyLock
+/// The name of the program
+/// # Issues
+///
+/// * Has to be hard-coded for now
+///
+/// # Things to Do
+///
+/// * Test platform-independent program-name detection with
+///   Windows cross-compilation + Wine.
+/// * Assign the name of the program to a LazyLock
 pub const PROGRAM_NAME: &str = "hw_rust";
 
 pub const CONF_DIR_NAME: &str = ".config";

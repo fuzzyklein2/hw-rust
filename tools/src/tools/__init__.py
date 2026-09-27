@@ -15,13 +15,7 @@ import tomllib
 from ._git_tools import get_upstream_url
 from ._last_saved_date import last_saved_datetime as LSD
 
-# print(f"Current working directory: {Path.cwd()}")
-
-# DATA_FILE = Path("tools/source/data/tools.json")
-# with DATA_FILE.open() as f:
-#     DATA = json.load(f)
-
-# pp(DATA)
+OUTPUT = False
 
 CWD = Path.cwd()
 if CWD.stem == 'lab':
@@ -86,5 +80,6 @@ from .constants import *
 # from .devel import *
 from .nbtools import *
 # from .read_lines import *
-print("Initialized `tools` package")
-print(f"{FOLDER_PICT} Current directory: {Path.cwd().name}")
+if OUTPUT:
+    print("Initialized `tools` package")
+    print(f"{FOLDER_PICT}Current directory: {Path.cwd().name}")

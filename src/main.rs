@@ -3,6 +3,8 @@
 *   🌿  MAIN
 * 
 *******************************************************************************/
+//! TODO: write docstring for this file.
+
 #![allow(warnings)]
 use std::io::{ Error };
 use std::sync::{ OnceLock };
