@@ -1,0 +1,23 @@
+[project]
+name = "hw-rust-tools"
+version = "0.1.0"
+authors = [{name = "Fuzzy Klein"}]
+description = "Python tools for Rust projects"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["tools*"]
+# exclude = ["etc*", "data*"]
+
+# [tool.setuptools.package-data]
+# pygnition = ["data/**/*"]

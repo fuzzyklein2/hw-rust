@@ -1,0 +1,67 @@
+# Build output
+build/
+*.o
+*.a
+*.so
+
+# Executables
+*.exe
+
+# IDE/editor
+.vscode/
+.idea/
+
+# OS junk
+.DS_Store
+
+# Temporary files
+*.swp
+*~
+
+.ipynb_checkpoints/
+# *.ipynb
+contrib/
+contrib
+logs/
+notes/
+rust/
+
+# *.txt
+Untitled*
+*.txt
+untitled*
+*.gch
+test/
+*#
+
+# Python files
+__pycache__/
+*.egg-info
+
+# GDB
+.gdb_history
+
+# Added by cargo
+
+/target
+
+# Added from `pygnition`
+
+worksheet
+*.py[cod]
+temp/
+var/
+*.out
+*.bak
+output*
+output/
+*.xcf
+._*/
+.~*#
+.venv/
+.envrc
+activate
+setup_venv
+bin/
+docs/scraps/
+docs/chats/
