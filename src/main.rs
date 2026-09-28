@@ -34,7 +34,7 @@ static ARGUMENTS: OnceLock<Args> = OnceLock::new();
 
 /******************************************************************************
 *
-*   main
+*   main()
 *
 ******************************************************************************/
 fn main() -> Result<(), Error> {
@@ -63,6 +63,8 @@ Log file:           {}
 ));
     
     info(&format!("Hello, 🌎 !"));
+
+    // Add any other processing here.
 
     Ok(())
 }

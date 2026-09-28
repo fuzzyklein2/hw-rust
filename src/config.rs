@@ -38,7 +38,7 @@ pub struct JSON {
 
 /******************************************************************************
 *
-*   JSON::new
+*   JSON::new()
 *
 ******************************************************************************/
 /// Load a JSON object from a file.
@@ -50,6 +50,8 @@ pub struct JSON {
 /// # Return
 /// 
 /// A new JSON object.
+///
+/// 🚧 TODO: This would be better implemented as the FromFile trait.
 impl JSON {
     pub fn new(p: &PathBuf) -> Self {
         if !p.exists() {
@@ -67,7 +69,7 @@ impl JSON {
 
 /******************************************************************************
 *
-*   configure
+*   configure()
 *
 ******************************************************************************/
 /// Initialize `FILE_SYSTEM`, read `config.json` into `CONFIGURATION`, parse the

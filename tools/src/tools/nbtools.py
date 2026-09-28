@@ -4,11 +4,12 @@
 #   
 ###############################################################################
 from datetime import datetime as dt
-from functools import singledispatch
+from functools import partial, singledispatch
 import inspect
 import os
 from pathlib import Path
 from pprint import pprint as pp
+import subprocess
 import sys
 
 from grep import grep
@@ -23,7 +24,7 @@ from tools import *
 
 ###############################################################################
 #   
-#   Docstring
+#   DOCSTRING
 #   
 ###############################################################################
 __doc__ = f"""{DATA["description"]}.
@@ -73,85 +74,11 @@ from .constants import *
 
 ###############################################################################
 #   
-#   LOGGING
+#   LIST TOOLS
 #   
 ###############################################################################
-def error(s:str):
-    """ Print an error message.
 
-        :param s: The message to print.
-    """
-    rp(ERROR_PICT + '[red]ERROR[/red]: ' + s)
-
-def warn(s:str):
-    """ Print a warning.
-
-        :param s: The message to print.
-    """
-    rp(WARNING_PICT + '[yellow]WARNING[/yellow]: ' + s)
-
-def critical(s:str):
-    """ Print a critical message.
-
-        :param s: The message to print.
-
-    """
-    rp(CRITICAL_PICT + '[red]CRITICAL[/red]: ' + s)
-
-def info(s:str):
-    """ Print some extra information.
-
-        :param s: The message to print.
-    """
-    rp(INFO_PICT + '[cyan]INFO[/cyan]: ' + s)
-
-def debug(s:str):
-    """ Print debugging information.
-
-        :param s: The message to print.
-    """
-    rp(DEBUG_PICT + '[green]DEBUG[/green]; ' + s)
-
-
-###############################################################################
-#   
-#   columnize
-#   
-###############################################################################
-def columnize(L:list[str]):
-    """ Arrange the list of strings into columns. `rich` handles spacing of its color strings. 
-    
-        :param L: The list of strings to columnize.
-    """
-    Console().print(Columns(sorted(L), expand=True, equal=True))
-
-
-###############################################################################
-#   
-#   display_doc
-#   
-###############################################################################
-def display_doc(func):
-    """
-        Display a function or class docstring as Markdown in Jupyter Lab
-        safely, avoiding duplicated headers.
-
-        :param func: The function to document.
-        :todo: Polish up the output.
-    """
-    doc = func.__doc__ or ""
-    # Split lines and remove any that are blank at the start
-    lines = doc.splitlines()
-    while lines and not lines[0].strip():
-        lines.pop(0)
-    cleaned_doc = "\n".join(lines)
-    display(Markdown(cleaned_doc))
-
-###############################################################################
-#   
-#   empty
-#   
-###############################################################################
+# ══════════════════════════════════ empty ══════════════════════════════════
 @singledispatch
 def empty(arg)->bool:
     """Print an error message and depart."""
@@ -165,59 +92,96 @@ def _(L:list)->bool:
 
 ###############################################################################
 #   
-#   display_source
+#   DATES & TIMES
 #   
 ###############################################################################
-@singledispatch
-def display_source(arg)->None:
-    """Print an error message and depart."""
-    error(f': display_source : bad argument : {arg} : Argument must be str or Path')
 
-@display_source.register
-def _(s:str, lang:str='python')->None:
-    """ Display the given string as Markdown.
-
-        :param s: String containing source code to display.
-        :param lang: Language of the source code.
-
-        :todo: Make sure that `lang` has a valid value.
-               If not, just do something generic.
+# ═══════════════════════════════════ now ═══════════════════════════════════
+def now(as_str=False):
     """
-    display(Markdown(f'```{lang}\n{s}'))
-
-@display_source.register
-def _(p:Path, lang:str='python')->None:
-    """ Open a file and display its contents as source code.
-
-        :param p: Path to the input file.
+        Return the current date and time.
     """
-    display_source(p.read_text(), lang=lang)
+    if as_str: return str(dt.now())
+    return dt.now()
 
-@display_source.register
-def _(obj:object, lang:str='python')->None:
-    """ 
-        Display an object's source code as Markdown.
+###############################################################################
+#   
+#   OUTPUT
+#   
+###############################################################################
 
-        :param obj: The object.
+# ══════════════════════════════════ error ══════════════════════════════════
+def error(s:str):
+    """ Print an error message.
+
+        :param s: The message to print.
     """
-    display_source(inspect.getsource(obj))
+    rp(ERROR_PICT + '[red]ERROR[/red]: ' + s)
+
+# ══════════════════════════════════ warn ══════════════════════════════════
+def warn(s:str):
+    """ Print a warning.
+
+        :param s: The message to print.
+    """
+    rp(WARNING_PICT + '[yellow]WARNING[/yellow]: ' + s)
+
+# ════════════════════════════════ critical ════════════════════════════════
+def critical(s:str):
+    """ Print a critical message.
+
+        :param s: The message to print.
+
+    """
+    rp(CRITICAL_PICT + '[red]CRITICAL[/red]: ' + s)
+
+# ══════════════════════════════════ info ══════════════════════════════════
+def info(s:str):
+    """ Print some extra information.
+
+        :param s: The message to print.
+    """
+    rp(INFO_PICT + '[cyan]INFO[/cyan]: ' + s)
+
+# ══════════════════════════════════ debug ══════════════════════════════════
+def debug(s:str):
+    """ Print debugging information.
+
+        :param s: The message to print.
+    """
+    rp(DEBUG_PICT + '[green]DEBUG[/green]; ' + s)
+
+
+# ════════════════════════════════ columnize ════════════════════════════════
+def columnize(L:list[str]):
+    """ Arrange the list of strings into columns. `rich` handles spacing of its color strings. 
+    
+        :param L: The list of strings to columnize.
+    """
+    Console().print(Columns(sorted(L), expand=True, equal=True))
+
 
 ###############################################################################
 #   
 #   FILE SYSTEM
 #   
 ###############################################################################
-# TODO: Left off here with the documentation.
-def cwd():
-    """Return the current working directory."""
+
+# ═══════════════════════════════════ cwd ═══════════════════════════════════
+def cwd()-> Path:
+    """ # Return
+          `Path` to the current working directory.
+    """
     return Path.cwd()
 
+# ═══════════════════════════════════ pwd ═══════════════════════════════════
 def pwd():
     """Print `cwd()` and return it."""
     CWD = cwd()
     print(f'{FOLDER_PICT}Current working directory: {CWD}')
     return CWD
 
+# ═══════════════════════════════════ cd ═══════════════════════════════════
 def cd(p:str|Path)->Path|None:
     """Change the current working directory."""
     p = Path(p)
@@ -227,12 +191,33 @@ def cd(p:str|Path)->Path|None:
     os.chdir(p)
     return p
 
+# ═════════════════════════════════ hidden ═════════════════════════════════
 def hidden(p: Path | str | None) -> bool:
+    """ # Return
+
+        `True` if any part of the `Path` is hidden (`.startswith('.')`).
+
+        🚧 _TODO_: Really should include files that end with `'~'`, `'#'`, etc. 
+    """
     return any(map(lambda s: s.startswith('.'), p.parts))
 
+# ═══════════════════════════════════ lsd ═══════════════════════════════════
 def lsd(p: Path | str | None = None, output = True) -> list[Path]:
     """ List the given directory.
-        @todo This needs to have a recursive option.
+
+        # Parameters
+
+            * `p`: `Path` to the directory, a `str` representing that
+                   path, or `None`, in which case `cwd` is assumed.
+            * `output`: Whether to print the resulting list. `True` by default.
+            
+        # Return
+
+        A `list` of the files within `p`.
+        
+        🚧 _TODO_:  This needs to have a recursive option.
+        🚧 _TODO_:  Fancy colored output like `bash` displays.
+
     """
     if not p: p = Path.cwd()
     p = Path(p)
@@ -241,23 +226,24 @@ def lsd(p: Path | str | None = None, output = True) -> list[Path]:
         pp(list(map(str, paths)))
     return paths
 
+###############################################################################
+#   
+#   OBJECT TOOLS
+#   
+###############################################################################
+
+# ═════════════════════════════════ public ═════════════════════════════════
 def public(obj)->list:
     """Return the (supposedly) "public" members of the given object."""
     return sorted([s for s in dir(obj) if not s.startswith('_')])
 
-def doxify(text, print_result=True):
-    # Just add comment delimiters and asterisks.
-    lines = text.split('\n')[1:]
-    result = ['/**']
-    result.extend([' * ' + s for s in lines])
-    result.pop()
-    result.append(' */')
-    result = '\n'.join(result)
-    if print_result: print(result)
-    pyperclip.copy(result + NEWLINE)
-    print("Docstring copied to clipboard")
-    return result
+###############################################################################
+#   
+#   TEXT TOOLS
+#   
+###############################################################################
 
+# ══════════════════════════════════ grepy ══════════════════════════════════
 def grepy(
     pattern,
     project_name,
@@ -313,13 +299,91 @@ def grepy(
                 
     return TODOS
 
-def now(as_str=False):
-    """
-        Return the current date and time.
-    """
-    if as_str: return str(dt.now())
-    return dt.now()
 
+###############################################################################
+#   
+#   DOCUMENTATION
+#   
+###############################################################################
+
+# ═══════════════════════════════ display_doc ═══════════════════════════════
+def display_doc(func):
+    """
+        Display a function or class docstring as Markdown in Jupyter Lab
+        safely, avoiding duplicated headers.
+
+        :param func: The function to document.
+        🚧 _TODO_: Polish up the output. Right now it's not displayed as Markdown.
+               The problem is indentation of the docstring.
+    """
+    doc = func.__doc__.strip() or ""
+    # Split lines and remove any that are blank at the start
+    lines = doc.splitlines()
+    print(f"Number of lines: {len(lines)}")
+    print(f"First line: {lines[1]}")
+    print(f"Length of `lines[0]`: {len(lines[1])}")
+    leading_spaces = 0
+    i = 0
+    j = 0
+    for i in range(len(lines[0])):
+        if lines[0][i] != SPACE:
+            break
+        leading_spaces += 1
+        
+    print(i)
+    print(lines[0][0])
+    lines = [ line[leading_spaces:] for line in lines ]
+    cleaned_doc = "\n".join(lines)
+    display(Markdown(cleaned_doc))
+
+# ═════════════════════════════ display_source ═════════════════════════════
+@singledispatch
+def display_source(arg)->None:
+    """Print an error message and depart."""
+    error(f': display_source : bad argument : {arg} : Argument must be str or Path')
+
+@display_source.register
+def _(s:str, lang:str='python')->None:
+    """ Display the given string as Markdown.
+
+        :param s: String containing source code to display.
+        :param lang: Language of the source code.
+
+        :todo: Make sure that `lang` has a valid value.
+               If not, just do something generic.
+    """
+    display(Markdown(f'```{lang}\n{s}'))
+
+@display_source.register
+def _(p:Path, lang:str='python')->None:
+    """ Open a file and display its contents as source code.
+
+        :param p: Path to the input file.
+    """
+    display_source(p.read_text(), lang=lang)
+
+@display_source.register
+def _(obj:object, lang:str='python')->None:
+    """ 
+        Display an object's source code as Markdown.
+
+        :param obj: The object.
+    """
+    display_source(inspect.getsource(obj))
+
+def doxify(text, print_result=True):
+    # Just add comment delimiters and asterisks.
+    lines = text.split('\n')[1:]
+    result = ['/**']
+    result.extend([' * ' + s for s in lines])
+    result.pop()
+    result.append(' */')
+    result = '\n'.join(result)
+    if print_result: print(result)
+    pyperclip.copy(result + NEWLINE)
+    print("Docstring copied to clipboard")
+    return result
+# ═════════════════════════════════ rdocify ═════════════════════════════════
 @singledispatch
 def rdocify(arg, file_doc=False) -> str | None:
     """ Consider this an error. """
@@ -327,7 +391,8 @@ def rdocify(arg, file_doc=False) -> str | None:
 
 @rdocify.register
 def _(s: str, file_doc=False) -> str | None:
-    s = NEWLINE.join(map(lambda s: CPP_COMMENT + (EXCLAMATION if file_doc else SLASH) + SPACE + s, s.rstrip().split(NEWLINE)[1:]))
+    s = NEWLINE.join(map(lambda s: CPP_COMMENT + (EXCLAMATION if file_doc else SLASH)
+                                   + SPACE + s, s.rstrip().split(NEWLINE)[1:]))
     pyperclip.copy(s + NEWLINE)
     return s
 
@@ -352,6 +417,7 @@ def clear():
         print(f"{CHECK_PICT} Jupyter output cleared.")
         return 0
     
+# ══════════════════════════════════ banner ══════════════════════════════════
 def banner(text: str, style="rust") -> str | None:
     """ Convert `s` to a source code banner. """
     # `style` must be "py" or "rust"
@@ -371,3 +437,60 @@ def banner(text: str, style="rust") -> str | None:
     ]) + NEWLINE + bottom
     pyperclip.copy(value)
     return value
+
+syscmd = partial(subprocess.run, text=True, capture_output=True, shell=True)
+
+# ══════════════════════════════ function_header ══════════════════════════════
+def function_header(s: str, style="rust", bar_width=16) -> str:
+    """
+        Decorate a string with a bar heading like the one above.
+
+        # Parameters
+
+        ## Arguments
+
+            * `s`: The string to decorate.
+
+        ## Keyword Arguments
+        
+            * `style`: The comment style. Can (must) be `'py'` or `'rust'`.
+                       `'rust'` by default.
+            * `bar_width`: _Deprecated_
+    """
+    LEFT = HASH_MARK if style=="py" else CPP_COMMENT
+    BAR_WIDTH = int((SOURCE_TEXT_WIDTH - len(s) - len(LEFT) - 3) / 2)
+    BAR = BOX_DRAWING_DOUBLE_HORIZONTAL * BAR_WIDTH
+    value = LEFT + SPACE + BAR + SPACE + s.strip() + SPACE + BAR + NEWLINE
+    pyperclip.copy(value)
+    return value
+    
+# ══════════════════════════════ block_comment ══════════════════════════════
+def block_comment(s: str, indents=(0,4), style='rust') -> str:
+    """ Encase `s` in a block comment. 
+
+        # Parameters
+
+            * `s``
+              : The comment string, presumably multiple lines.
+            * `indents`
+              : A tuple. `[0]` is the number of tabs.
+                         `[1]` is the number of spaces in each tab.
+
+        # Return
+        
+            The parameter string as a block comment in the requested style.
+
+        # TODO
+
+            * Wrap `s` to a width that will fit within `SOURCE_TEXT_WIDTH`.
+              That's currently on the user to ensure, if it gets done at all.
+    """
+    text_lines = s.strip().split(NEWLINE)
+    LEFT = HASH_MARK if style == 'py' else CPP_COMMENT
+    output_lines = [ LEFT + SPACE + line for line in text_lines ]
+    return NEWLINE.join(output_lines)
+
+# ══════════════════════════════ typing_guide ══════════════════════════════
+def typing_guide():
+    print(SPACE * 71 + WARNING_PICT + "==> " + CRITICAL_PICT)
+

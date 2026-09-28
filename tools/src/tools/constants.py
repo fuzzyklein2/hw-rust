@@ -21,6 +21,8 @@ SLASH = '/'
 ASTERISK = '*'
 HASH_MARK = '#'
 CPP_COMMENT = '//'
+CPP_BLOCK_COMMENT_START = SLASH + ASTERISK
+CPP_BLOCK_COMMENT_END = ASTERISK + SLASH
 
 ###############################################################################
 #   
@@ -29,7 +31,7 @@ CPP_COMMENT = '//'
 #   Constants used by `banner`
 #   
 ###############################################################################
-
+BOX_DRAWING_DOUBLE_HORIZONTAL = '═'
 # C and Rust style banners
 COMMENT_BORDER = ASTERISK * (SOURCE_TEXT_WIDTH -1)
 TOP_BORDER = SLASH + COMMENT_BORDER
