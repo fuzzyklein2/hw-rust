@@ -3,7 +3,24 @@
 *   🌿  MAIN
 * 
 *******************************************************************************/
-//! TODO: write docstring for this file.
+//! # 💬 Description
+//! 
+//! Declare global constants and define the `main` function.
+//! 
+//! # 🚧 Things to Do
+//! 
+//! * Find (or make) a more appropriate `Error` to return from `main`.
+//! 
+//! # 👀 See Also
+//! 
+//! * 🔗 [Error](https://doc.rust-lang.org/stable/std/io/struct.Error.html)
+//! * 🔗 [OnceLock](https://doc.rust-lang.org/stable/std/sync/struct.OnceLock.html)
+//! * 🔗 [Result](https://doc.rust-lang.org/stable/std/result/enum.Result.html)
+//! 
+//! ## 📝 Note
+//! 
+//! I assume these links are correct. Multiple use of names in different namespaces
+//! can make the documentation difficult to navigate at times.
 
 #![allow(warnings)]
 use std::io::{ Error };

@@ -13,6 +13,7 @@ pub const CHECK_PICT: &str = "✅  ";
 pub const FAILURE_PICT: &str = "❌  ";
 pub const FOLDER_PICT: &str = "📁  ";
 pub const WORLD_PICT: &str = "🌎";
+pub const EXCLAIM_PICT: &str = "❗";
 
 pub static THIS_PROCESS: LazyLock<PathBuf>
     = LazyLock::new(|| current_exe().unwrap());
@@ -23,11 +24,11 @@ pub static BASE_DIR: LazyLock<PathBuf>
                                    .parent().unwrap()
                                    .to_path_buf());
 /// The name of the program
-/// # Issues
+/// # 📌 Issues
 ///
 /// * Has to be hard-coded for now
 ///
-/// # Things to Do
+/// # 🚧 Things to Do
 ///
 /// * Test platform-independent program-name detection with
 ///   Windows cross-compilation + Wine.
