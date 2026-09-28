@@ -1,0 +1,1 @@
+Skeleton app for a Linux CLI Rust program.
