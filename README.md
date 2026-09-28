@@ -30,4 +30,4 @@ hw_rust [OPTIONS] [ARGS]...
 ## Description
 
 
-Copyright &copy; 2019 Russell Alan Klein. All rights reserved.
+Copyright &copy; 2026 Russell Alan Klein. All rights reserved.
