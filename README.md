@@ -1,18 +1,21 @@
-# Synopsis
+# Hello, 🌎
+Skeleton app for Rust projects.
 
-## Usage
+## Synopsis
+
+### Usage
 
 ```bash
 hw_rust [OPTIONS] [ARGS]...
 ```
 
-## Arguments
+### Arguments
 
 ```bash
   [ARGS]...  Other arguments
 ```
 
-## Options
+### Options
 
 ```bash
   -d, --debug    Enable debug logging
@@ -24,8 +27,7 @@ hw_rust [OPTIONS] [ARGS]...
 
 ```
 
-# Description
+## Description
 
-Skeleton app for Rust projects.
 
 Copyright &copy; 2019 Russell Alan Klein. All rights reserved.
