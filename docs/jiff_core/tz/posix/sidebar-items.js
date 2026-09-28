@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["Day","TzEnv"],"struct":["DayTime","Dst","ParseError","Rule","TimeZone","TransitionCivilTime"]};

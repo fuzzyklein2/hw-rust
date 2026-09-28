@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ArgAction","ColorChoice","ValueHint"],"macro":[["arg",1],["command",1],["value_parser",1]],"mod":["builder","error","parser"],"struct":["Arg","ArgGroup","ArgMatches","Command","Id"],"trait":["Args","CommandFactory","FromArgMatches","Parser","Subcommand","ValueEnum"],"type":["Error"]};
