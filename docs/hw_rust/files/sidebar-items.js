@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["cwd","home","pwd","read_lines"],"struct":["FileSystem"]};

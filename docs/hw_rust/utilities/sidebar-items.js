@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["program_name","rotate_log_files"]};

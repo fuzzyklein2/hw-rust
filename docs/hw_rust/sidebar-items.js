@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["main"],"mod":["config","constants","files","getargs","logging","utilities"],"static":["ARGUMENTS","CONFIGURATION","FILE_SYSTEM","INPUT"]};

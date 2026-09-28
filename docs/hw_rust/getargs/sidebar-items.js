@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["get_piped_input"],"struct":["Args"]};
