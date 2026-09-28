@@ -1,3 +1,8 @@
+###############################################################################
+#   
+#   NOTEBOOK TOOLS
+#   
+###############################################################################
 from datetime import datetime as dt
 from functools import singledispatch
 import inspect
@@ -14,31 +19,125 @@ from rich import print as rp
 from rich.columns import Columns
 from rich.console import Console
 
+from tools import *
+
+###############################################################################
+#   
+#   Docstring
+#   
+###############################################################################
+__doc__ = f"""{DATA["description"]}.
+
+
+========== ⚠️  WARNING! ⚠️  ==========
+
+This project is currently under construction.
+Stay tuned for updates.
+
+## Version
+
+{DATA["version"]}
+
+## Author
+
+{DATA["authors"][0]["name"]}
+
+## Date
+
+{LSD(__file__).date()}
+
+## Usage
+
+### Jupyter
+```python
+from tools import *
+```
+
+### Terminal
+From the project directory:
+```bash
+python -m tools.constants
+```
+
+### Notebooks
+
+## System Requirements
+
+
+
+@see [GitHub]({get_upstream_url()})
+
+"""
+
 from .constants import *
 
+###############################################################################
+#   
+#   LOGGING
+#   
+###############################################################################
 def error(s:str):
+    """ Print an error message.
+
+        :param s: The message to print.
+    """
     rp(ERROR_PICT + '[red]ERROR[/red]: ' + s)
 
 def warn(s:str):
+    """ Print a warning.
+
+        :param s: The message to print.
+    """
     rp(WARNING_PICT + '[yellow]WARNING[/yellow]: ' + s)
 
 def critical(s:str):
+    """ Print a critical message.
+
+        :param s: The message to print.
+
+    """
     rp(CRITICAL_PICT + '[red]CRITICAL[/red]: ' + s)
 
 def info(s:str):
+    """ Print some extra information.
+
+        :param s: The message to print.
+    """
     rp(INFO_PICT + '[cyan]INFO[/cyan]: ' + s)
 
 def debug(s:str):
+    """ Print debugging information.
+
+        :param s: The message to print.
+    """
     rp(DEBUG_PICT + '[green]DEBUG[/green]; ' + s)
 
+
+###############################################################################
+#   
+#   columnize
+#   
+###############################################################################
 def columnize(L:list[str]):
-    """ Arrange the list of strings into columns. `rich` handles spacing of its color strings. """
+    """ Arrange the list of strings into columns. `rich` handles spacing of its color strings. 
+    
+        :param L: The list of strings to columnize.
+    """
     Console().print(Columns(sorted(L), expand=True, equal=True))
 
+
+###############################################################################
+#   
+#   display_doc
+#   
+###############################################################################
 def display_doc(func):
     """
-    Display a function or class docstring as Markdown in Jupyter Lab
-    safely, avoiding duplicated headers.
+        Display a function or class docstring as Markdown in Jupyter Lab
+        safely, avoiding duplicated headers.
+
+        :param func: The function to document.
+        :todo: Polish up the output.
     """
     doc = func.__doc__ or ""
     # Split lines and remove any that are blank at the start
@@ -48,6 +147,11 @@ def display_doc(func):
     cleaned_doc = "\n".join(lines)
     display(Markdown(cleaned_doc))
 
+###############################################################################
+#   
+#   empty
+#   
+###############################################################################
 @singledispatch
 def empty(arg)->bool:
     """Print an error message and depart."""
@@ -59,6 +163,11 @@ def _(L:list)->bool:
     """
     return len(L) == 0
 
+###############################################################################
+#   
+#   display_source
+#   
+###############################################################################
 @singledispatch
 def display_source(arg)->None:
     """Print an error message and depart."""
@@ -66,16 +175,39 @@ def display_source(arg)->None:
 
 @display_source.register
 def _(s:str, lang:str='python')->None:
+    """ Display the given string as Markdown.
+
+        :param s: String containing source code to display.
+        :param lang: Language of the source code.
+
+        :todo: Make sure that `lang` has a valid value.
+               If not, just do something generic.
+    """
     display(Markdown(f'```{lang}\n{s}'))
 
 @display_source.register
 def _(p:Path, lang:str='python')->None:
+    """ Open a file and display its contents as source code.
+
+        :param p: Path to the input file.
+    """
     display_source(p.read_text(), lang=lang)
 
 @display_source.register
 def _(obj:object, lang:str='python')->None:
+    """ 
+        Display an object's source code as Markdown.
+
+        :param obj: The object.
+    """
     display_source(inspect.getsource(obj))
 
+###############################################################################
+#   
+#   FILE SYSTEM
+#   
+###############################################################################
+# TODO: Left off here with the documentation.
 def cwd():
     """Return the current working directory."""
     return Path.cwd()
@@ -220,3 +352,22 @@ def clear():
         print(f"{CHECK_PICT} Jupyter output cleared.")
         return 0
     
+def banner(text: str, style="rust") -> str | None:
+    """ Convert `s` to a source code banner. """
+    # `style` must be "py" or "rust"
+    if not style in COMMENT_STYLES:
+        error("Unknown style")
+        return
+    if style == "rust":
+        left = ASTERISK + SPACE * 3
+        top = COMMENT_BORDER + NEWLINE + ASTERISK + NEWLINE
+        bottom = ASTERISK + NEWLINE + BOTTOM_BORDER + NEWLINE
+    elif style == "py":
+        left = HASH_MARK + SPACE * 3
+        top = PY_COMMENT_BORDER + NEWLINE + left + NEWLINE
+        bottom = left + NEWLINE + PY_COMMENT_BORDER + NEWLINE
+    value = top + NEWLINE.join([
+        left + s for s in text.strip().split(NEWLINE)
+    ]) + NEWLINE + bottom
+    pyperclip.copy(value)
+    return value

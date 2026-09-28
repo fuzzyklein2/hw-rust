@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>MathLive → SymPy Multi-Plot</title>
+<script src="https://unpkg.com/mathlive"></script>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+  #math.invalid { border:2px solid red; background:#ffe6e6; }
+  #color-pickers input { margin-right:10px; margin-bottom:5px; }
+</style>
+</head>
+<body style="font-family:sans-serif; padding:2rem;">
+<h2>Interactive Math Visualization</h2>
+
+<math-field id="math" style="font-size:1.5em; width:500px;">
+y = sin(x); y = x^2; (cos(t), sin(t))
+</math-field>
+<br>
+<div id="color-pickers"></div>
+<br>
+<button id="convert">Convert & Plot</button>
+
+<pre id="result"></pre>
+<div id="plot" style="width:900px;height:600px;"></div>
+
+<script>
+const defaultColors = [
+    '#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd',
+    '#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf'
+];
+let expressionColors = [];
+
+// --- Generate color pickers ---
+function updateColorPickers(expressions){
+    const container = document.getElementById("color-pickers");
+
+    // Only rebuild if the number of expressions changes
+    if(expressionColors.length !== expressions.length){
+        container.innerHTML = "";
+        expressionColors = [];
+        expressions.forEach((expr, idx) => {
+            const picker = document.createElement("input");
+            picker.type = "color";
+            picker.value = defaultColors[idx % defaultColors.length];
+            picker.title = expr;
+            picker.oninput = () => { expressionColors[idx] = picker.value; convertMath(); };
+            container.appendChild(document.createTextNode(expr + " "));
+            container.appendChild(picker);
+            container.appendChild(document.createElement("br"));
+            expressionColors.push(picker.value);
+        });
+    }
+}
+
+// --- Fetch backend and plot ---
+async function convertMath() {
+    const latex = document.getElementById("math").getValue();
+    const expressions = latex.split(";").map(e=>e.trim()).filter(Boolean);
+    updateColorPickers(expressions);
+
+    const res = await fetch("/convert", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ latex })
+    });
+    const data = await res.json();
+
+    const plotDiv = document.getElementById("plot");
+    let plotData = [];
+    let xGlobalMin = Infinity, xGlobalMax = -Infinity;
+    let yGlobalMin = Infinity, yGlobalMax = -Infinity;
+
+    data.plots.forEach((pd, idx) => {
+        if(!pd || pd.error){ console.error(pd?.error); return; }
+        const color = expressionColors[idx] || defaultColors[idx % defaultColors.length];
+
+        if(pd.type==='function'||pd.type==='parametric'){
+            plotData.push({x:pd.x, y:pd.y, mode:'lines', name:pd.label, line:{color:color, width:2}});
+            xGlobalMin = Math.min(xGlobalMin, Math.min(...pd.x));
+            xGlobalMax = Math.max(xGlobalMax, Math.max(...pd.x));
+            yGlobalMin = Math.min(yGlobalMin, Math.min(...pd.y));
+            yGlobalMax = Math.max(yGlobalMax, Math.max(...pd.y));
+        }
+        else if(pd.type==='implicit'){
+            plotData.push({z:pd.Z, x:pd.X, y:pd.Y, type:'contour',
+                contours:{coloring:'lines', showlabels:true, start:0, end:0, size:1},
+                line:{width:2,color:color}, name:pd.label
+            });
+            xGlobalMin = Math.min(xGlobalMin, pd.X[0]);
+            xGlobalMax = Math.max(xGlobalMax, pd.X[pd.X.length-1]);
+            yGlobalMin = Math.min(yGlobalMin, pd.Y[0]);
+            yGlobalMax = Math.max(yGlobalMax, pd.Y[pd.Y.length-1]);
+        }
+        else if(pd.type==='inequality'){
+            plotData.push({z:pd.Z, x:pd.X, y:pd.Y, type:'heatmap',
+                colorscale:[[0,'white'],[1,color]], showscale:false, name:pd.label
+            });
+            xGlobalMin = Math.min(xGlobalMin, pd.X[0]);
+            xGlobalMax = Math.max(xGlobalMax, pd.X[pd.X.length-1]);
+            yGlobalMin = Math.min(yGlobalMin, pd.Y[0]);
+            yGlobalMax = Math.max(yGlobalMax, pd.Y[pd.Y.length-1]);
+        }
+        else if(pd.type==='surface'){
+            plotData.push({x:pd.X, y:pd.Y, z:pd.Z, type:'surface', colorscale:'Viridis', name:pd.label});
+        }
+    });
+
+    // --- Auto axes scaling with minimal padding ---
+    const xPad = (xGlobalMax - xGlobalMin)*0.05 || 1;
+    const yPad = (yGlobalMax - yGlobalMin)*0.05 || 1;
+
+    const layout = {
+        margin:{t:50,b:50,l:50,r:50},
+        width:900,
+        height:600,
+        legend: { x:1, y:1, traceorder:'normal', dragmode:true },
+        xaxis: {title:'x', showgrid:true, zeroline:true, range:[xGlobalMin-xPad, xGlobalMax+xPad]},
+        yaxis: {title:'y', showgrid:true, zeroline:true, range:[yGlobalMin-yPad, yGlobalMax+yPad]}
+    };
+
+    Plotly.newPlot(plotDiv, plotData, layout);
+}
+
+document.getElementById("convert").onclick = convertMath;
+
+// Auto-update while typing
+let typingTimer;
+const field = document.getElementById("math");
+field.addEventListener("input", ()=>{
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(convertMath, 500);
+});
+</script>
+</body>
+</html>

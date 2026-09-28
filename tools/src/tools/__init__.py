@@ -1,8 +1,8 @@
-"""
-    @file __init__.py
-    
-    Maybe `doxygen` just recognizes the triple-quotes.
-"""
+###############################################################################
+#   
+#   INITIALIZATION
+#   
+###############################################################################
 
 # print("Initializing tools...")
 
@@ -49,19 +49,16 @@ Stay tuned for updates.
 
 ### Jupyter
 ```python
-from tools.glob4meson import glob4meson as g4m
-g4m()
+from tools import *
 ```
 
 ### Terminal
 From the project directory:
 ```bash
-bin/g4m
+python -m tools.constants
 ```
 
-### Script
-The intended usage. Call just before building objects or executables.
-@see Terminal. 
+### Notebooks
 
 ## System Requirements
 
@@ -82,4 +79,4 @@ from .nbtools import *
 # from .read_lines import *
 if OUTPUT:
     print("Initialized `tools` package")
-    print(f"{FOLDER_PICT}Current directory: {Path.cwd().name}")
+    print(f"{FOLDER_PICT}Current directory: {BASE.name}")

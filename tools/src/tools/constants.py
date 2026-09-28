@@ -1,4 +1,14 @@
+###############################################################################
+#   
+#   🔒 CONSTANTS
+#   
+###############################################################################
+"""
+    Define global constant values.
+"""
 from datetime import datetime
+
+SOURCE_TEXT_WIDTH = 79
 
 NEWLINE = '\n'
 HYPHEN = '-'
@@ -8,7 +18,42 @@ PERIOD = '.'
 PARENT = '../'
 EXCLAMATION = '!'
 SLASH = '/'
+ASTERISK = '*'
+HASH_MARK = '#'
+CPP_COMMENT = '//'
 
+###############################################################################
+#   
+#   Banners
+#
+#   Constants used by `banner`
+#   
+###############################################################################
+
+# C and Rust style banners
+COMMENT_BORDER = ASTERISK * (SOURCE_TEXT_WIDTH -1)
+TOP_BORDER = SLASH + COMMENT_BORDER
+BOTTOM_BORDER = COMMENT_BORDER + SLASH
+
+# Bash and Python style banners
+PY_COMMENT_BORDER = HASH_MARK * SOURCE_TEXT_WIDTH
+
+###############################################################################
+#   
+#   Comment styles
+#
+#   Valid values for `style` kwarg to `banner`
+#   
+###############################################################################
+COMMENT_STYLES = [ "py", "rust" ]
+
+###############################################################################
+#   
+#   Source file extensions
+#
+#   Various extensions for source files used for globbing and stuff
+#   
+###############################################################################
 SRC_FILE_EXTS = [
     'c',
     'cc',
@@ -28,23 +73,32 @@ SRC_FILE_EXTS = [
     'rs'
 ]
 
-CPP_COMMENT = '//'
 
+###############################################################################
+#   
+#   Unicode emojis
+#   
+###############################################################################
+# Seems to be necessary for terminal output
 LEADING_SPACE = ' '
 
+# Logging
 CRITICAL_PICT = f"🛑{LEADING_SPACE}"
 INFO_PICT = f"💬{LEADING_SPACE}"
 ERROR_PICT = f"❗{LEADING_SPACE}"
 WARNING_PICT = f"⚠️{LEADING_SPACE}"
 DEBUG_PICT = f"🐞{LEADING_SPACE}"
+
+# Check and X
+CHECK_PICT = f"✅{LEADING_SPACE}"
+FAILURE_PICT = f"❌{LEADING_SPACE}"
+
+# Miscellaneous
 CONSTRUCTION_PICT = f"🚧{LEADING_SPACE}"
-NEWLINE = '\n'
 STOP_PICT = f"✋{LEADING_SPACE}"
 WAVE_PICT = f"🖐️{LEADING_SPACE}"
 # RGB for CMYK process blue: approximately (0, 183, 235)
 ASK_PICT = f"\033[38;2;0;183;235m\u2754\033[0m{LEADING_SPACE}"  # ❔ in blue
-CHECK_PICT = f"✅{LEADING_SPACE}"
-FAILURE_PICT = f"❌{LEADING_SPACE}"
 HOURGLASS_PICT = f"⏳{LEADING_SPACE}"
 INFO_PICT_2 = f"ℹ️{LEADING_SPACE}"
 GEAR_PICT = f"⚙️{LEADING_SPACE}"
