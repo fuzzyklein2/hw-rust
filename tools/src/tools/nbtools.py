@@ -360,7 +360,7 @@ def banner(text: str, style="rust") -> str | None:
         return
     if style == "rust":
         left = ASTERISK + SPACE * 3
-        top = COMMENT_BORDER + NEWLINE + ASTERISK + NEWLINE
+        top = SLASH + COMMENT_BORDER + NEWLINE + ASTERISK + NEWLINE
         bottom = ASTERISK + NEWLINE + BOTTOM_BORDER + NEWLINE
     elif style == "py":
         left = HASH_MARK + SPACE * 3

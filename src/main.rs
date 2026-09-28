@@ -22,11 +22,21 @@ use files::{ cwd, FileSystem, home };
 use getargs::{ Args };
 use logging::{ debug, info, init_log };
 
+/******************************************************************************
+*
+*   CONSTANTS
+*
+******************************************************************************/
 static FILE_SYSTEM: OnceLock<FileSystem> = OnceLock::new();
 static CONFIGURATION: OnceLock<JSON> = OnceLock::new();
 static INPUT: OnceLock<String> = OnceLock::new();
 static ARGUMENTS: OnceLock<Args> = OnceLock::new();
 
+/******************************************************************************
+*
+*   main
+*
+******************************************************************************/
 fn main() -> Result<(), Error> {
     configure()?;
     init_log()?;
