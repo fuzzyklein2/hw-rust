@@ -1,4 +1,8 @@
-//! Define helper functions.
+/******************************************************************************
+*
+*   UTILITIES
+*
+******************************************************************************/
 use std::env::current_exe;
 use std::fs;
 use std::io::Error;
@@ -35,12 +39,13 @@ pub fn rotate_log_files() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
-//     #[test]
-//     fn test_program_name() {
-//         assert!(program_name().starts_with("hello"));
-//     }
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_program_name() {
+        let PROGRAM = program_name().unwrap();
+        assert!(PROGRAM.starts_with("hw_rust"));
+    }
 
-// }
+}

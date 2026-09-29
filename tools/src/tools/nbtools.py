@@ -494,3 +494,45 @@ def block_comment(s: str, indents=(0,4), style='rust') -> str:
 def typing_guide():
     print(SPACE * 71 + WARNING_PICT + "==> " + CRITICAL_PICT)
 
+def build():
+    """ Build the entire project. """
+    p = syscmd("cargo build")
+    if p.returncode:
+        print(f"{FAILURE_PICT}Compilation failed!")
+        print(p.stderr)
+        return
+    print(f'{CHECK_PICT}Project compiled')
+    p = syscmd("cargo test")
+    if p.returncode:
+        print(f"{FAILURE_PICT}Testing failed!!")
+        print(p.stderr)
+        return
+    print(f'{CHECK_PICT}Testing complete')
+    p = syscmd("cargo doc")
+    if p.returncode:
+        print(f"{FAILURE_PICT}Generating docs failed!")
+        print(p.stderr)
+        return
+    print(f'{CHECK_PICT}Generated documentation')
+    clear()
+    p = syscmd("git add .")
+    if p.returncode:
+        print(f"{FAILURE_PICT}Couldn't stage changes!")
+        print(p.stderr)
+        return
+    print(f'{CHECK_PICT}Changes staged for `git`')
+    message = input("❓ Commit message: ")
+    command = f'git commit -m "{message}"'
+    p = syscmd(command)
+    if p.returncode:
+        print(f"{FAILURE_PICT}Could not commit changes!")
+        print(p.stderr)
+        return
+    print(f'{CHECK_PICT}Repository commited')
+    p = syscmd("git push")
+    if p.returncode:
+        print(f"{FAILURE_PICT}Push to GitHub failed!")
+        print(p.stderr)
+        return
+    print(f'{CHECK_PICT}Pushed project to GitHub')
+    
