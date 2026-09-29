@@ -3,13 +3,27 @@
 #   🔒 CONSTANTS
 #   
 ###############################################################################
+
+
+# ════════════════════════════════ DOCSTRING ════════════════════════════════
+
 """
     Define global constant values.
 """
+
+# ═════════════════════════════ SYSTEM IMPORTS ═════════════════════════════
 from datetime import datetime
 
+# ═════════════════════════════════ NUMBERS ═════════════════════════════════
 SOURCE_TEXT_WIDTH = 79
 
+###############################################################################
+#   
+#   STRINGS
+#   
+###############################################################################
+
+# ═══════════════════════════════ CHARACTERS ═══════════════════════════════
 NEWLINE = '\n'
 HYPHEN = '-'
 SPACE = ' '
@@ -20,18 +34,17 @@ EXCLAMATION = '!'
 SLASH = '/'
 ASTERISK = '*'
 HASH_MARK = '#'
+COLON = ':'
+UNDERSCORE = '_'
+
+# ════════════════════════════════ COMMENTS ════════════════════════════════
 CPP_COMMENT = '//'
 CPP_BLOCK_COMMENT_START = SLASH + ASTERISK
 CPP_BLOCK_COMMENT_END = ASTERISK + SLASH
 
-###############################################################################
-#   
-#   Banners
-#
-#   Constants used by `banner`
-#   
-###############################################################################
+# ═════════════════════════════════ BANNERS ═════════════════════════════════
 BOX_DRAWING_DOUBLE_HORIZONTAL = '═'
+
 # C and Rust style banners
 COMMENT_BORDER = ASTERISK * (SOURCE_TEXT_WIDTH -1)
 TOP_BORDER = SLASH + COMMENT_BORDER
@@ -40,22 +53,10 @@ BOTTOM_BORDER = COMMENT_BORDER + SLASH
 # Bash and Python style banners
 PY_COMMENT_BORDER = HASH_MARK * SOURCE_TEXT_WIDTH
 
-###############################################################################
-#   
-#   Comment styles
-#
-#   Valid values for `style` kwarg to `banner`
-#   
-###############################################################################
+# ═════════════════════════════════ STYLES ═════════════════════════════════
 COMMENT_STYLES = [ "py", "rust" ]
 
-###############################################################################
-#   
-#   Source file extensions
-#
-#   Various extensions for source files used for globbing and stuff
-#   
-###############################################################################
+# ═════════════════════════ Source File Extensions ═════════════════════════
 SRC_FILE_EXTS = [
     'c',
     'cc',
@@ -75,12 +76,7 @@ SRC_FILE_EXTS = [
     'rs'
 ]
 
-
-###############################################################################
-#   
-#   Unicode emojis
-#   
-###############################################################################
+# ═════════════════════════════ Unicode Emojis ═════════════════════════════
 # Seems to be necessary for terminal output
 LEADING_SPACE = ' '
 
@@ -117,6 +113,10 @@ FOLDER_PICT = f"📁{LEADING_SPACE}"
 LOG_PICT = f"🗃️{LEADING_SPACE}"
 POLICE_LIGHT_PICT = f"🚨{LEADING_SPACE}"
 LINK_PICT = f"🔗{LEADING_SPACE}"
+
+EYES_PICT = "👀"
+PUSH_PIN_PICT = "📌"
+TODO_PICT = "🚧"
 
 WORRIED_PICT = f"😦{LEADING_SPACE}"
 FROWN_PICT = f"😞{LEADING_SPACE}"

@@ -494,6 +494,7 @@ def block_comment(s: str, indents=(0,4), style='rust') -> str:
 def typing_guide():
     print(SPACE * 71 + WARNING_PICT + "==> " + CRITICAL_PICT)
 
+# ═══════════════════════════════════ build ═══════════════════════════════════
 def build():
     """ Build the entire project. """
     p = syscmd("cargo build")
@@ -506,6 +507,10 @@ def build():
     if p.returncode:
         print(f"{FAILURE_PICT}Testing failed!!")
         print(p.stderr)
+        return
+    rcode = test_tools()
+    if rcode:
+        print(f"{FAILURE_PICT}Python testing failed!")
         return
     print(f'{CHECK_PICT}Testing complete')
     p = syscmd("cargo doc")
@@ -535,4 +540,22 @@ def build():
         print(p.stderr)
         return
     print(f'{CHECK_PICT}Pushed project to GitHub')
-    
+
+def test_tools():
+    """ Execute the modules in this package. """
+    EXE = sys.executable
+    SOURCE_FILES = [s for s in os.listdir("tools/src/tools")
+                    if not s.startswith(UNDERSCORE)
+                        and s.endswith('py')
+                   ]
+    for f in SOURCE_FILES:
+        path = Path(f)
+        mod = path.stem
+        cmd_line = f"{EXE} -m tools.{mod}"
+        process = syscmd(cmd_line)
+        if process.returncode:
+            error(f"`{mod}` execution failed!")
+            print(process.stderr)
+            break
+        # print(process.stdout)
+    return process.returncode
