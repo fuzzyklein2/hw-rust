@@ -29,7 +29,6 @@ from tools import *
 ###############################################################################
 __doc__ = f"""{DATA["description"]}.
 
-
 ========== ⚠️  WARNING! ⚠️  ==========
 
 This project is currently under construction.
@@ -383,6 +382,7 @@ def doxify(text, print_result=True):
     pyperclip.copy(result + NEWLINE)
     print("Docstring copied to clipboard")
     return result
+    
 # ═════════════════════════════════ rdocify ═════════════════════════════════
 @singledispatch
 def rdocify(arg, file_doc=False) -> str | None:
@@ -401,6 +401,7 @@ def _(p:Path, file_doc=False) -> str | None:
     """ Open the file and pass its text to `rdocify(str)`. """
     return rdocify(p.read_text(), file_doc)
 
+# ══════════════════════════════════ clear ══════════════════════════════════
 def clear():
     """ Clear the outputs of all Jupyter notebook code cells. """
     # print("Running `clear()`...")
@@ -494,6 +495,12 @@ def block_comment(s: str, indents=(0,4), style='rust') -> str:
 def typing_guide():
     print(SPACE * 71 + WARNING_PICT + "==> " + CRITICAL_PICT)
 
+###############################################################################
+#   
+#   BUILDING THE PROJECT
+#   
+###############################################################################
+
 # ═══════════════════════════════════ build ═══════════════════════════════════
 def build():
     """ Build the entire project. """
@@ -541,6 +548,7 @@ def build():
         return
     print(f'{CHECK_PICT}Pushed project to GitHub')
 
+# ═══════════════════════════════ test_tools ═══════════════════════════════
 def test_tools():
     """ Execute the modules in this package. """
     EXE = sys.executable
